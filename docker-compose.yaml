@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: currency-exchange-app
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    tty: true
+    command: >
+      bash -c " wait-for-it -h $POSTGRES_HOST -p $POSTGRES_PORT
+      && alembic -c alembic.ini upgrade head
+      && uvicorn currency_exchange.asgi:app --reload --reload-dir currency_exchange --reload-dir tests --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+#    volumes:
+#      - "./pgdata:/var/lib/postgresql/data"
+    env_file:
+      - .env

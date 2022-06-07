@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "CurrencyExchange"
+version = "0.0.0"
+description = "Currency exchange http service"
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "~0.78"
+sqlmodel = "~0.0"
+SQLAlchemy = "~1.4"
+asyncpg = "~0.25"
+uvicorn = "~0.17"
+bs4 = "~0.0"
+lxml = "~4.9"
+alembic = "~1.8"
+httpx = "~0.23"
+
+[tool.poetry.dev-dependencies]
+black = "~22.3"
+pylint = "~2.14"
+isort = "~5.10"
+pre-commit = "~2.19"
+pytest = "~7.1"
+pytest-asyncio = "~0.18"
+SQLAlchemy-Utils = "~0.38"
+psycopg2-binary = "~2.9"
+
+[build-system]
+requires = ["poetry-core>=1.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.pytest.ini_options]
+asyncio_mode = 'auto'

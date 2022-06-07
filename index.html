@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Currency exchange</title>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+        <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    </head>
+
+    <body>
+
+        <form class="ui form segment">
+            <p>Currency exchange</p>
+
+            <div class="ui action field">
+                <label>Amount</label>
+                <input name="amount" type="number" placeholder="Amount" id="amount">
+            </div>
+
+            <div class="ui action field">
+                <label>In currency</label>
+                <select name="in_currency" class="ui compact selection dropdown" id="in_currency">
+                    <option selected="" value="PLN">PLN</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+
+            <div class="ui action field">
+                <label>Out currency</label>
+                <select name="out_currency" class="ui compact selection dropdown" id="out_currency">
+                    <option value="PLN">PLN</option>
+                    <option selected="" value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+
+            <div class="ui action field">
+                <label>Exchange date</label>
+                <input type="date" name="exchange_date" id="exchange_date">
+            </div>
+          <div class="ui blue submit button" id="submit_button">Submit</div>
+        </form>
+
+        <div class="ui message">
+            <div class="header">Received response:</div>
+            <p id="response_container"></p>
+        </div>
+
+        <script>
+            $('#submit_button').api({
+                url: 'http://localhost:8000/exchange',
+                method: 'POST',
+                serializeForm: true,
+                contentType: "application/json",
+                beforeSend: function(settings) {
+                    console.log(settings.data);
+                    settings.data =  JSON.stringify(settings.data);
+                    return settings;
+                },
+                successTest: function(response) {
+                    // test whether a JSON response is valid
+                    console.log(response.statusCode);
+                    return response.amount || false;
+                },
+                onSuccess: function(response) {
+                    // valid response and response.success = true
+                    $('#response_container').text(response.amount);
+                },
+                onFailure: function(response) {
+                    // request failed, or valid response but response.success = false
+                    console.log(response);
+                    $('#response_container').text(JSON.stringify(response.detail));
+                },
+                onError: function(errorMessage) {
+                    // invalid response
+                    console.log(errorMessage);
+                    $('#response_container').text(errorMessage);
+                },
+                onAbort: function(errorMessage) {
+                    // navigated to a new page, CORS issue, or user canceled request
+                    console.log(errorMessage);
+                    $('#response_container').text(errorMessage);
+                }
+            });
+        </script>
+
+    </body>
+</html>

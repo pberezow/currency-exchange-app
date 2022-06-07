@@ -1,0 +1,4 @@
+.idea/
+pgdata/
+venv/
+**/__pycache__/**
